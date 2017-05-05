@@ -6,6 +6,8 @@ import ru.yandex.qatools.allure.annotations.Step;
 import utils.PropertyConfig;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -57,8 +59,14 @@ public class Queries {
     }
 
     @Attachment(value = "{0}", type = "text/csv")
-    public static File attachFileToReport (String file) {
-        return new File(PropertyConfig.getProperty("testFile"));
+    public static byte[] attachFileToReport (String file) {
+        try {
+            File attachment = new File(PropertyConfig.getProperty("testFile"));
+            return Files.readAllBytes(Paths.get(attachment.getPath()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new byte[0];
     }
 
 }
